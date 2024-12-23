@@ -55,7 +55,7 @@ terraform {
   backend "s3" {
     bucket         = "terraform-state-bucket-inhouse-website-api"
     key            = "state/statefile.tfstate"
-    region         = var.aws_region
+    region         = ca-central-1
     encrypt        = true
     dynamodb_table = "terraform-state-locks-inhouse-website-api"
   }
