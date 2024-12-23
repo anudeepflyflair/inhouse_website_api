@@ -492,7 +492,7 @@ resource "aws_lambda_function" "flair-hopper-api" {
   function_name                      = "flair-hopper-api"
   handler                            = "lambda_function.lambda_handler"
   role                               = "arn:aws:iam::888577036740:role/service-role/flair-hopper-api-role-m645of6u"
-  runtime                            = "Python 3.13"
+  runtime                            = "python3.10"
   timeout                            = 3
   ephemeral_storage {
     size = 512
@@ -504,9 +504,9 @@ resource "aws_lambda_function" "flair-hopper-api" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
-  #   ]
+  layers = [
+     "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:flair-hopper-api:v1" 
+    ]
 }
 
 resource "aws_lambda_function" "lowFareoptions_Dev_Website" {
