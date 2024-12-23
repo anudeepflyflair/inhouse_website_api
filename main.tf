@@ -17,7 +17,7 @@ resource "aws_lambda_function" "paymenthMethods" {
     mode = "PassThrough"
   }
   layers = [
-     "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:paymenthMethods:v1" 
+     "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:paymenthMethods:v1" 
     ]
 }
 
@@ -46,7 +46,7 @@ resource "aws_lambda_function" "reservationPaymentTransaction_dev_IHW" {
     mode = "PassThrough"
   }
     # layers = [
-    #  "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
+    #  "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
     # ]
 }
 
@@ -69,7 +69,7 @@ resource "aws_lambda_function" "ancillarySearch" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -92,7 +92,7 @@ resource "aws_lambda_function" "addancillary-hoper-dev-web" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -123,7 +123,7 @@ resource "aws_lambda_function" "voucherCode" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -146,7 +146,7 @@ resource "aws_lambda_function" "klaviyo_event_dev" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -169,7 +169,7 @@ resource "aws_lambda_function" "flightSearch_dev_Website" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -192,7 +192,7 @@ resource "aws_lambda_function" "accessibilityRequest_Website_Dev" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -215,7 +215,7 @@ resource "aws_lambda_function" "baggage" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -238,7 +238,7 @@ resource "aws_lambda_function" "voucherCode_Web_Dev" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -267,7 +267,7 @@ resource "aws_lambda_function" "reservationPatmentTransaction" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -290,7 +290,7 @@ resource "aws_lambda_function" "seatSealection" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -313,7 +313,7 @@ resource "aws_lambda_function" "Website_Dev_LamdaAuthoriser" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -336,7 +336,7 @@ resource "aws_lambda_function" "flightSelection_dev_Web" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -367,7 +367,7 @@ resource "aws_lambda_function" "lambdaFunction-dev" {
     mode = "Active"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -390,7 +390,7 @@ resource "aws_lambda_function" "flightSearch" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -413,7 +413,7 @@ resource "aws_lambda_function" "createReservation_Web_Dev" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -436,7 +436,7 @@ resource "aws_lambda_function" "test_calender" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -459,7 +459,7 @@ resource "aws_lambda_function" "brb_purchaseService_dev_Web" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -482,7 +482,7 @@ resource "aws_lambda_function" "Website_Dev_CalenderRates" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -505,7 +505,7 @@ resource "aws_lambda_function" "flair-hopper-api" {
     mode = "PassThrough"
   }
   layers = [
-     "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:flair-hopper-api:v1" 
+     "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:flair-hopper-api:v1" 
     ]
 }
 
@@ -528,7 +528,7 @@ resource "aws_lambda_function" "lowFareoptions_Dev_Website" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
 
@@ -551,6 +551,6 @@ resource "aws_lambda_function" "JWTtoken_Website_Dev" {
     mode = "PassThrough"
   }
   # layers = [
-  #    "arn:aws:lambda:${data.aws_caller_identity.current.account_id}:layer:<layer_name>:<version>" 
+  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
   #   ]
 }
