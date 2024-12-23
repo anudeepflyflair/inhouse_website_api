@@ -112,3 +112,8 @@
 #   id = "JWTtoken_Website_Dev"
 #   to = aws_lambda_function.JWTtoken_Website_Dev
 # }
+
+# import {
+#   id = "user_profile_cleanup_delete"
+#   to = aws_lambda_function.user_profile_cleanup_delete
+# }
