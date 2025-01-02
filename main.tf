@@ -17,7 +17,7 @@ resource "aws_lambda_function" "paymenthMethods" {
     mode = "PassThrough"
   }
   layers = [
-     "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:paymenthMethods:v1" 
+     aws_lambda_layer_version.lambda_layer.arn
     ]
 }
 
@@ -45,9 +45,9 @@ resource "aws_lambda_function" "reservationPaymentTransaction_dev_IHW" {
   tracing_config {
     mode = "PassThrough"
   }
-    # layers = [
-    #  "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-    # ]
+      layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "ancillarySearch" {
@@ -68,9 +68,9 @@ resource "aws_lambda_function" "ancillarySearch" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "addancillary-hoper-dev-web" {
@@ -91,9 +91,9 @@ resource "aws_lambda_function" "addancillary-hoper-dev-web" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+   layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "voucherCode" {
@@ -122,9 +122,9 @@ resource "aws_lambda_function" "voucherCode" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "klaviyo_event_dev" {
@@ -145,9 +145,9 @@ resource "aws_lambda_function" "klaviyo_event_dev" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "flightSearch_dev_Website" {
@@ -168,9 +168,9 @@ resource "aws_lambda_function" "flightSearch_dev_Website" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "accessibilityRequest_Website_Dev" {
@@ -191,9 +191,9 @@ resource "aws_lambda_function" "accessibilityRequest_Website_Dev" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "baggage" {
@@ -214,9 +214,9 @@ resource "aws_lambda_function" "baggage" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "voucherCode_Web_Dev" {
@@ -237,9 +237,9 @@ resource "aws_lambda_function" "voucherCode_Web_Dev" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "reservationPatmentTransaction" {
@@ -266,9 +266,9 @@ resource "aws_lambda_function" "reservationPatmentTransaction" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "seatSealection" {
@@ -289,9 +289,9 @@ resource "aws_lambda_function" "seatSealection" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "Website_Dev_LamdaAuthoriser" {
@@ -312,9 +312,9 @@ resource "aws_lambda_function" "Website_Dev_LamdaAuthoriser" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "flightSelection_dev_Web" {
@@ -335,9 +335,9 @@ resource "aws_lambda_function" "flightSelection_dev_Web" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "lambdaFunction-dev" {
@@ -366,9 +366,9 @@ resource "aws_lambda_function" "lambdaFunction-dev" {
   tracing_config {
     mode = "Active"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "flightSearch" {
@@ -389,9 +389,9 @@ resource "aws_lambda_function" "flightSearch" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "createReservation_Web_Dev" {
@@ -412,9 +412,9 @@ resource "aws_lambda_function" "createReservation_Web_Dev" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "test_calender" {
@@ -435,9 +435,9 @@ resource "aws_lambda_function" "test_calender" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "brb_purchaseService_dev_Web" {
@@ -458,9 +458,9 @@ resource "aws_lambda_function" "brb_purchaseService_dev_Web" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "Website_Dev_CalenderRates" {
@@ -481,9 +481,9 @@ resource "aws_lambda_function" "Website_Dev_CalenderRates" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "flair-hopper-api" {
@@ -504,8 +504,8 @@ resource "aws_lambda_function" "flair-hopper-api" {
   tracing_config {
     mode = "PassThrough"
   }
-  layers = [
-     "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:flair-hopper-api:v1" 
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
     ]
 }
 
@@ -527,9 +527,9 @@ resource "aws_lambda_function" "lowFareoptions_Dev_Website" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+  layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
 
 resource "aws_lambda_function" "JWTtoken_Website_Dev" {
@@ -550,7 +550,7 @@ resource "aws_lambda_function" "JWTtoken_Website_Dev" {
   tracing_config {
     mode = "PassThrough"
   }
-  # layers = [
-  #    "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:layer:reservationPaymentTransaction_dev_IHW:v1" 
-  #   ]
+    layers = [
+     aws_lambda_layer_version.lambda_layer.arn
+    ]
 }
