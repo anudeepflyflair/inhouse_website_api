@@ -1,135 +1,75 @@
 #!/bin/bash
 
-# List of your API Gateway IDs and their human-readable names
-declare -A API_GATEWAYS=(
-  ["x9za9u6mei"]="Website-Dev"
-)
+# Set your API Gateway ID and AWS Region
+API_GATEWAY_ID="x9za9u6mei"
+AWS_REGION="ca-central-1"
 
-# Example stage name (this should be the same for all gateways if you're using the same stage)
-STAGE_NAME="dev"
+# Initialize Terraform (if not already done)
+echo "Initializing Terraform..."
+terraform init
 
-# Array of specific resource paths and methods to import
-declare -A RESOURCES=(
-  ["/v1/accessibilityRequest"]="GET"
-  ["/v1/searchAncillary"]="GET"
-  ["/v1/createReservation"]="POST"
-  ["/v1/flightSelect"]="GET"
-  ["/v1/lowFares"]="GET"
-  ["/v1/paymentMethods"]="GET"
-  ["/v1/paymentReservation"]="POST"
-  ["/v1/seatSelection"]="GET"
-  ["/v1/voucherCode"]="GET"
-)
+# Create a new API file to hold all imported resources
+API_FILE="api-gateway.tf"
+echo "Creating $API_FILE to store imported API Gateway resources..."
+echo "# API Gateway Resources" > $API_FILE
 
-# Loop over each API Gateway ID and its human-readable name
-for API_ID in "${!API_GATEWAYS[@]}"; do
-  HUMAN_READABLE_NAME="${API_GATEWAYS[$API_ID]}"
-  echo "Processing API Gateway: $HUMAN_READABLE_NAME (ID: $API_ID)"
+# Import the main API Gateway
+echo "Importing API Gateway: $API_GATEWAY_ID"
+terraform import aws_api_gateway_rest_api.api_gateway "$API_GATEWAY_ID"
+echo 'resource "aws_api_gateway_rest_api" "api_gateway" {}' >> $API_FILE
 
-  # Check if the API Gateway Rest API resource block exists in api-gateway.tf, if not create it
-  if ! grep -q "aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME" api-gateway.tf; then
-    echo "Creating Terraform block for aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME"
-    echo "
-resource \"aws_api_gateway_rest_api\" \"api_$HUMAN_READABLE_NAME\" {
-  name        = \"$HUMAN_READABLE_NAME\"
-  description = \"Imported API Gateway $HUMAN_READABLE_NAME\"
-}" >> api-gateway.tf
-  fi
+# Fetch all resources from the API Gateway
+echo "Fetching resources for API Gateway..."
+RESOURCES=$(aws apigateway get-resources --rest-api-id "$API_GATEWAY_ID" --region "$AWS_REGION" --query 'items[*].[id,path]' --output text)
 
-  # Import the API Gateway (Rest API)
-  echo "Importing API Gateway: $HUMAN_READABLE_NAME"
-  terraform import aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME $API_ID
+# Import each resource
+echo "Importing API Gateway resources..."
+while read -r RESOURCE_ID RESOURCE_PATH; do
+  RESOURCE_NAME=$(echo "$RESOURCE_PATH" | sed 's/[\/{}]/_/g' | sed 's/_$//')
+  
+  echo "Importing resource: $RESOURCE_PATH (ID: $RESOURCE_ID)"
+  terraform import aws_api_gateway_resource.resource_"$RESOURCE_NAME" "$API_GATEWAY_ID/$RESOURCE_ID"
+  
+  # Add resource to the api.tf file
+  echo "resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\" {}" >> $API_FILE
+done <<< "$RESOURCES"
 
-  # Loop through each resource path and method to import
-  for RESOURCE_PATH in "${!RESOURCES[@]}"; do
-    METHOD="${RESOURCES[$RESOURCE_PATH]}"
+# Import methods (GET, POST, etc.) for each resource
+echo "Importing methods for each resource..."
+for RESOURCE_ID in $(echo "$RESOURCES" | awk '{print $1}'); do
+  METHODS=$(aws apigateway get-resource --rest-api-id "$API_GATEWAY_ID" --resource-id "$RESOURCE_ID" --region "$AWS_REGION" --query 'resourceMethods' --output json | jq -r 'keys[]')
 
-    # Fetch resource ID using the API ID and resource path
-    resource_id=$(aws apigateway get-resources --rest-api-id $API_ID --query "items[?path=='$RESOURCE_PATH'].id" --output text)
-
-    if [ "$resource_id" == "None" ]; then
-      echo "No resource found for path: $RESOURCE_PATH"
-      continue
-    fi
-
-    # Check if the resource block exists in api-gateway.tf, if not create it
-    if ! grep -q "aws_api_gateway_resource.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}" api-gateway.tf; then
-      echo "Creating Terraform block for aws_api_gateway_resource.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}"
-      echo "
-resource \"aws_api_gateway_resource\" \"${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}\" {
-  rest_api_id = aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME.id
-  parent_id   = aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME.root_resource_id
-  path_part   = \"$RESOURCE_PATH\"
-}" >> api-gateway.tf
-    fi
-
-    # Import the resource into Terraform
-    echo "Importing resource: $RESOURCE_PATH (ID: $resource_id)"
-    terraform import aws_api_gateway_resource.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_} $API_ID/$resource_id
-
-    # Check if the method block exists in api-gateway.tf, if not create it
-    if ! grep -q "aws_api_gateway_method.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}" api-gateway.tf; then
-      echo "Creating Terraform block for aws_api_gateway_method.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}"
-      echo "
-resource \"aws_api_gateway_method\" \"${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}\" {
-  rest_api_id   = aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME.id
-  resource_id   = aws_api_gateway_resource.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}.id
-  http_method   = \"$METHOD\"
-  authorization = \"CUSTOM\"  # Adjust as needed (e.g., for AWS IAM, Lambda, etc.)
-}" >> api-gateway.tf
-    fi
-
-    # Import the method into Terraform
-    echo "Importing method: $METHOD for resource $RESOURCE_PATH"
-    terraform import aws_api_gateway_method.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD} $API_ID/$resource_id/$METHOD
-
-    # Fetch integration details for the method (if applicable)
-    integration=$(aws apigateway get-integration --rest-api-id $API_ID --resource-id $resource_id --http-method $METHOD --query 'uri' --output text)
-
-    if [ "$integration" != "None" ]; then
-      # Check if the integration block exists in api-gateway.tf, if not create it
-      if ! grep -q "aws_api_gateway_integration.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}" api-gateway.tf; then
-        echo "Creating Terraform block for aws_api_gateway_integration.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}"
-        echo "
-resource \"aws_api_gateway_integration\" \"${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}\" {
-  rest_api_id            = aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME.id
-  resource_id            = aws_api_gateway_resource.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}.id
-  http_method            = aws_api_gateway_method.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD}.http_method
-  integration_http_method = \"POST\"  # Change based on integration type
-  type                    = \"AWS_PROXY\"  # Change this depending on integration type (AWS_PROXY, HTTP, etc.)
-}" >> api-gateway.tf
-      fi
-
-      # Import the integration into Terraform
-      echo "Importing integration for method $METHOD at resource $RESOURCE_PATH"
-      terraform import aws_api_gateway_integration.${HUMAN_READABLE_NAME}_${RESOURCE_PATH//\//_}_${METHOD} $API_ID/$resource_id/$METHOD
-    fi
+  for METHOD in $METHODS; do
+    METHOD_NAME=$(echo "$METHOD" | tr '[:upper:]' '[:lower:]')
+    echo "Importing method: $METHOD for resource ID: $RESOURCE_ID"
+    terraform import aws_api_gateway_method.method_"$RESOURCE_ID"_"$METHOD_NAME" "$API_GATEWAY_ID/$RESOURCE_ID/$METHOD"
+    
+    # Add method to the api.tf file
+    echo "resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\" {}" >> $API_FILE
   done
-
-  # Import the stage (e.g., dev)
-  echo "Importing stage: $STAGE_NAME for API $HUMAN_READABLE_NAME"
-  terraform import aws_api_gateway_stage.${HUMAN_READABLE_NAME}_${STAGE_NAME} $API_ID/$STAGE_NAME
-
-  # Fetch deployment ID (for example, the latest deployment)
-  deployment_id=$(aws apigateway get-deployments --rest-api-id $API_ID --query 'items[0].id' --output text)
-
-  if [ "$deployment_id" != "None" ]; then
-    # Check if the deployment block exists in api-gateway.tf, if not create it
-    if ! grep -q "aws_api_gateway_deployment.${HUMAN_READABLE_NAME}_example_deployment" api-gateway.tf; then
-      echo "Creating Terraform block for aws_api_gateway_deployment.${HUMAN_READABLE_NAME}_example_deployment"
-      echo "
-resource \"aws_api_gateway_deployment\" \"${HUMAN_READABLE_NAME}_example_deployment\" {
-  rest_api_id = aws_api_gateway_rest_api.api_$HUMAN_READABLE_NAME.id
-  stage_name  = \"$STAGE_NAME\"
-}" >> api-gateway.tf
-    fi
-
-    # Import the deployment into Terraform
-    echo "Importing deployment: $deployment_id for API $HUMAN_READABLE_NAME"
-    terraform import aws_api_gateway_deployment.${HUMAN_READABLE_NAME}_example_deployment $API_ID/$deployment_id
-  fi
-
-  echo "Import complete for API Gateway: $HUMAN_READABLE_NAME"
 done
 
-echo "All API Gateways imported successfully!"
+# Import stages
+echo "Importing stages..."
+STAGES=$(aws apigateway get-stages --rest-api-id "$API_GATEWAY_ID" --region "$AWS_REGION" --query 'item[*].stageName' --output text)
+for STAGE in $STAGES; do
+  echo "Importing stage: $STAGE"
+  terraform import aws_api_gateway_stage.stage_"$STAGE" "$API_GATEWAY_ID/$STAGE"
+  
+  # Add stage to the api.tf file
+  echo "resource \"aws_api_gateway_stage\" \"stage_$STAGE\" {}" >> $API_FILE
+done
+
+# Import deployments
+echo "Importing deployments..."
+DEPLOYMENTS=$(aws apigateway get-deployments --rest-api-id "$API_GATEWAY_ID" --region "$AWS_REGION" --query 'items[*].id' --output text)
+for DEPLOYMENT in $DEPLOYMENTS; do
+  echo "Importing deployment: $DEPLOYMENT"
+  terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
+  
+  # Add deployment to the api.tf file
+  echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
+done
+
+echo "All API Gateway resources, methods, stages, and deployments have been imported successfully!"
+echo "The api.tf file has been created with all necessary resources."
