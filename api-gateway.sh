@@ -2,15 +2,15 @@
 
 # List of your API Gateway IDs and their human-readable names
 declare -A API_GATEWAYS=(
-  ["api-id-1"]="accessibilityRequest"
+  ["api-id-1"]="accessibilityRequest_Website_Dev"
   ["api-id-2"]="ancillarySearch"
-  ["api-id-3"]="createReservation"
-  ["api-id-4"]="flightSelection"
-  ["api-id-5"]="lowFareoptions"
-  ["api-id-6"]="paymentMethods"
-  ["api-id-7"]="reservationPaymentTransaction"
-  ["api-id-8"]="seatSelection"
-  ["api-id-9"]="voucherCode"
+  ["api-id-3"]="createReservation_Web_Dev"
+  ["api-id-4"]="flightSelection_dev_Web"
+  ["api-id-5"]="lowFareoptions_Dev_Website"
+  ["api-id-6"]="paymenthMethods"
+  ["api-id-7"]="reservationPaymentTransaction_dev_IHW"
+  ["api-id-8"]="seatSealection"
+  ["api-id-9"]="voucherCode_Web_Dev"
 )
 
 # Example stage name (this should be the same for all gateways if you're using the same stage)
