@@ -33,7 +33,24 @@ while read -r RESOURCE_ID RESOURCE_PATH; do
     echo "Importing resource: $RESOURCE_PATH (ID: $RESOURCE_ID)"
     terraform import aws_api_gateway_resource.resource_"$RESOURCE_NAME" "$API_GATEWAY_ID/$RESOURCE_ID"
   else
-    echo "Resource $RESOURCE_PATH already exists in the configuration, skipping import."
+    # Check if resource block exists but has different attributes
+    RESOURCE_BLOCK=$(grep "resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\"" "$API_FILE")
+    if [ -z "$RESOURCE_BLOCK" ]; then
+      echo "Resource $RESOURCE_PATH already exists in the configuration, skipping import."
+    else
+      # Check if resource ID and path match
+      RESOURCE_ID_IN_FILE=$(echo "$RESOURCE_BLOCK" | grep -oP '(?<=id = ")[^"]*')
+      RESOURCE_PATH_IN_FILE=$(echo "$RESOURCE_BLOCK" | grep -oP '(?<=path = ")[^"]*')
+      if [ "$RESOURCE_ID" != "$RESOURCE_ID_IN_FILE" ] || [ "$RESOURCE_PATH" != "$RESOURCE_PATH_IN_FILE" ]; then
+        # If attributes don't match, remove existing resource block and import again
+        echo "Resource $RESOURCE_PATH has different attributes, removing existing block and importing again."
+        sed -i "/resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\"/,+1d" "$API_FILE"
+        echo "resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\" {}" >> $API_FILE
+        terraform import aws_api_gateway_resource.resource_"$RESOURCE_NAME" "$API_GATEWAY_ID/$RESOURCE_ID"
+      else
+        echo "Resource $RESOURCE_PATH already exists in the configuration with matching attributes, skipping import."
+      fi
+    fi
   fi
 done <<< "$RESOURCES"
 
@@ -51,7 +68,24 @@ for RESOURCE_ID in $(echo "$RESOURCES" | awk '{print $1}'); do
       echo "Importing method: $METHOD for resource ID: $RESOURCE_ID"
       terraform import aws_api_gateway_method.method_"$RESOURCE_ID"_"$METHOD_NAME" "$API_GATEWAY_ID/$RESOURCE_ID/$METHOD"
     else
-      echo "Method $METHOD for resource ID $RESOURCE_ID already exists in the configuration, skipping import."
+      # Check if method block exists but has different attributes
+      METHOD_BLOCK=$(grep "resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\"" "$API_FILE")
+      if [ -z "$METHOD_BLOCK" ]; then
+        echo "Method $METHOD for resource ID $RESOURCE_ID already exists in the configuration, skipping import."
+      else
+        # Check if method name and resource ID match
+        METHOD_NAME_IN_FILE=$(echo "$METHOD_BLOCK" | grep -oP '(?<=name = ")[^"]*')
+        RESOURCE_ID_IN_FILE=$(echo "$METHOD_BLOCK" | grep -oP '(?<=resource_id = ")[^"]*')
+        if [ "$METHOD_NAME" != "$METHOD_NAME_IN_FILE" ] || [ "$RESOURCE_ID" != "$RESOURCE_ID_IN_FILE" ]; then
+          # If attributes don't match, remove existing method block and import again
+          echo "Method $METHOD for resource ID $RESOURCE_ID has different attributes, removing existing block and importing again."
+          sed -i "/resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\"/,+1d" "$API_FILE"
+          echo "resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\" {}" >> $API_FILE
+          terraform import aws_api_gateway_method.method_"$RESOURCE_ID"_"$METHOD_NAME" "$API_GATEWAY_ID/$RESOURCE_ID/$METHOD"
+        else
+          echo "Method $METHOD for resource ID $RESOURCE_ID already exists in the configuration with matching attributes, skipping import."
+        fi
+      fi
     fi
   done
 done
@@ -66,7 +100,23 @@ for STAGE in $STAGES; do
     terraform import aws_api_gateway_stage.stage_"$STAGE" "$API_GATEWAY_ID/$STAGE"
     echo "resource \"aws_api_gateway_stage\" \"stage_$STAGE\" {}" >> $API_FILE
   else
-    echo "Stage $STAGE already exists in the configuration, skipping import."
+    # Check if stage block exists but has different attributes
+    STAGE_BLOCK=$(grep "resource \"aws_api_gateway_stage\" \"stage_$STAGE\"" "$API_FILE")
+    if [ -z "$STAGE_BLOCK" ]; then
+      echo "Stage $STAGE already exists in the configuration, skipping import."
+    else
+      # Check if stage name matches
+      STAGE_NAME_IN_FILE=$(echo "$STAGE_BLOCK" | grep -oP '(?<=stage_name = ")[^"]*')
+      if [ "$STAGE" != "$STAGE_NAME_IN_FILE" ]; then
+        # If attributes don't match, remove existing stage block and import again
+        echo "Stage $STAGE has different attributes, removing existing block and importing again."
+        sed -i "/resource \"aws_api_gateway_stage\" \"stage_$STAGE\"/,+1d" "$API_FILE"
+        echo "resource \"aws_api_gateway_stage\" \"stage_$STAGE\" {}" >> $API_FILE
+        terraform import aws_api_gateway_stage.stage_"$STAGE" "$API_GATEWAY_ID/$STAGE"
+      else
+        echo "Stage $STAGE already exists in the configuration with matching attributes, skipping import."
+      fi
+    fi
   fi
 done
 
@@ -80,7 +130,23 @@ for DEPLOYMENT in $DEPLOYMENTS; do
     terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
     echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
   else
-    echo "Deployment $DEPLOYMENT already exists in the configuration, skipping import."
+    # Check if deployment block exists but has different attributes
+    DEPLOYMENT_BLOCK=$(grep "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\"" "$API_FILE")
+    if [ -z "$DEPLOYMENT_BLOCK" ]; then
+      echo "Deployment $DEPLOYMENT already exists in the configuration, skipping import."
+    else
+      # Check if deployment ID matches
+      DEPLOYMENT_ID_IN_FILE=$(echo "$DEPLOYMENT_BLOCK" | grep -oP '(?<=id = ")[^"]*')
+      if [ "$DEPLOYMENT" != "$DEPLOYMENT_ID_IN_FILE" ]; then
+        # If attributes don't match, remove existing deployment block and import again
+        echo "Deployment $DEPLOYMENT has different attributes, removing existing block and importing again."
+        sed -i "/resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\"/,+1d" "$API_FILE"
+        echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
+        terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
+      else
+        echo "Deployment $DEPLOYMENT already exists in the configuration with matching attributes, skipping import."
+      fi
+    fi
   fi
 done
 
