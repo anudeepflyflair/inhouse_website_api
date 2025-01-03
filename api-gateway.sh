@@ -9,7 +9,7 @@ echo "Initializing Terraform..."
 terraform init
 
 # Create a new API file to hold all imported resources
-API_FILE="api.tf"
+API_FILE="api-gateway.tf"
 echo "Creating $API_FILE to store imported API Gateway resources..."
 echo "# API Gateway Resources" > $API_FILE
 
