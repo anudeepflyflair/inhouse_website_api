@@ -130,7 +130,7 @@ resource "aws_api_gateway_integration" "accessibility_request_get" {
   http_method = aws_api_gateway_method.accessibility_request_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:accessibilityRequest/invocations"
+  uri         = aws_lambda_function.accessibilityRequest_Website_Dev.arn
 }
 
 resource "aws_api_gateway_integration" "ancillary_search_get" {
@@ -139,7 +139,7 @@ resource "aws_api_gateway_integration" "ancillary_search_get" {
   http_method = aws_api_gateway_method.ancillary_search_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:ancillarySearch/invocations"
+  uri         = aws_lambda_function.ancillarySearch.arn
 }
 
 resource "aws_api_gateway_integration" "create_reservation_post" {
@@ -148,7 +148,7 @@ resource "aws_api_gateway_integration" "create_reservation_post" {
   http_method = aws_api_gateway_method.create_reservation_post.http_method
   integration_http_method = "POST"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:createReservation/invocations"
+  uri         = aws_lambda_function.createReservation_Web_Dev.arn
 }
 
 resource "aws_api_gateway_integration" "flight_selection_get" {
@@ -157,7 +157,7 @@ resource "aws_api_gateway_integration" "flight_selection_get" {
   http_method = aws_api_gateway_method.flight_selection_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:flightSelection/invocations"
+  uri         = aws_api_gateway_method.flight_selection_get.arn
 }
 
 resource "aws_api_gateway_integration" "low_fares_get" {
@@ -166,7 +166,7 @@ resource "aws_api_gateway_integration" "low_fares_get" {
   http_method = aws_api_gateway_method.low_fares_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:lowFares/invocations"
+  uri         = aws_lambda_function.accessibilityRequest_Website_Dev.arn
 }
 
 resource "aws_api_gateway_integration" "payment_methods_get" {
@@ -175,7 +175,7 @@ resource "aws_api_gateway_integration" "payment_methods_get" {
   http_method = aws_api_gateway_method.payment_methods_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:paymentMethods/invocations"
+  uri         = aws_lambda_function
 }
 
 resource "aws_api_gateway_integration" "payment_reservation_post" {
@@ -184,7 +184,7 @@ resource "aws_api_gateway_integration" "payment_reservation_post" {
   http_method = aws_api_gateway_method.payment_reservation_post.http_method
   integration_http_method = "POST"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:paymentReservation/invocations"
+  uri         = aws_lambda_function.reservationPaymentTransaction_dev_IHW.arn
 }
 
 resource "aws_api_gateway_integration" "seat_selection_get" {
@@ -193,7 +193,7 @@ resource "aws_api_gateway_integration" "seat_selection_get" {
   http_method = aws_api_gateway_method.seat_selection_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:seatSelection/invocations"
+  uri         = aws_lambda_function.seatSealection.arn
 }
 
 resource "aws_api_gateway_integration" "voucher_code_get" {
@@ -202,7 +202,7 @@ resource "aws_api_gateway_integration" "voucher_code_get" {
   http_method = aws_api_gateway_method.voucher_code_get.http_method
   integration_http_method = "GET"
   type        = "LAMBDA"
-  uri         = "arn:aws:apigateway:ca-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ca-central-1:888577036740:function:voucherCode/invocations"
+  uri         = aws_lambda_function.voucherCode_Web_Dev
 }
 
 # # Deploy the API Gateway
