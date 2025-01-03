@@ -14,7 +14,16 @@ pipeline {
             }
         }
 
-        // Stage 2: Terraform Format Check
+        // Stage 2: Terraform Init
+        stage('Terraform Init') {
+            steps {
+                script {
+                    sh 'terraform init -input=false'
+                }
+            }
+        }
+        
+        // Stage 3: Terraform Format Check
         stage('Terraform Format Check') {
             steps {
                 script {
@@ -23,20 +32,11 @@ pipeline {
             }
         }
 
-        // Stage 3: Terraform Validate
+        // Stage 4: Terraform Validate
         stage('Terraform Validate') {
             steps {
                 script {
                     sh 'terraform validate'
-                }
-            }
-        }
-
-        // Stage 4: Terraform Init
-        stage('Terraform Init') {
-            steps {
-                script {
-                    sh 'terraform init -input=false'
                 }
             }
         }
