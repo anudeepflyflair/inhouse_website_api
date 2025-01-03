@@ -1,0 +1,147 @@
+[
+    {
+      "name": "accessibilityRequest_Website_Dev",
+      "description": "Accessibility Request API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/accessibilityRequest",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/accessibilityRequest"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ancillarySearch",
+      "description": "Ancillary Search API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/searchAncillary",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/searchAncillary"
+          }
+        }
+      ]
+    },
+    {
+      "name": "createReservation_Web_Dev",
+      "description": "Create Reservation API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/createReservation",
+          "method": "POST",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/POST/v1/createReservation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "flightSelection_dev_Web",
+      "description": "Flight Selection API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/flightSelect",
+          "method": "GET",
+          "authorization": "NONE",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/flightSelect"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lowFareoptions_Dev_Website",
+      "description": "Low Fare Options API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/lowFares",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/lowFares"
+          }
+        }
+      ]
+    },
+    {
+      "name": "paymenthMethods",
+      "description": "Payment Methods API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/paymentMethods",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/paymentMethods"
+          }
+        }
+      ]
+    },
+    {
+      "name": "reservationPaymentTransaction_dev_IHW",
+      "description": "Reservation Payment Transaction API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/paymentReservation",
+          "method": "POST",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/POST/v1/paymentReservation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "seatSealection",
+      "description": "Seat Selection API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/seatSelection",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/seatSelection"
+          }
+        }
+      ]
+    },
+    {
+      "name": "voucherCode_Web_Dev",
+      "description": "Voucher Code API",
+      "restApiId": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei",
+      "stageName": "dev",
+      "resources": [
+        {
+          "path": "/v1/voucherCode",
+          "method": "GET",
+          "authorization": "CUSTOM",
+          "integration": {
+            "uri": "arn:aws:execute-api:ca-central-1:888577036740:x9za9u6mei/*/GET/v1/voucherCode"
+          }
+        }
+      ]
+    }
+]
+  
