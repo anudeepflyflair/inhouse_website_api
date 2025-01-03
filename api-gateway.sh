@@ -26,12 +26,13 @@ RESOURCES=$(aws apigateway get-resources --rest-api-id "$API_GATEWAY_ID" --regio
 echo "Importing API Gateway resources..."
 while read -r RESOURCE_ID RESOURCE_PATH; do
   RESOURCE_NAME=$(echo "$RESOURCE_PATH" | sed 's/[\/{}]/_/g' | sed 's/_$//')
+  RESOURCE_HASH=$(echo -n "$RESOURCE_ID$RESOURCE_PATH" | sha256sum | cut -d' ' -f1)
   
   # Check if resource block already exists
-  if ! grep -q "resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\"" "$API_FILE"; then
-    echo "resource \"aws_api_gateway_resource\" \"resource_$RESOURCE_NAME\" {}" >> $API_FILE
+  if ! grep -q "resource \"aws_api_gateway_resource\" \"resource_${RESOURCE_HASH}\"" "$API_FILE"; then
+    echo "resource \"aws_api_gateway_resource\" \"resource_${RESOURCE_HASH}\" {}" >> $API_FILE
     echo "Importing resource: $RESOURCE_PATH (ID: $RESOURCE_ID)"
-    terraform import aws_api_gateway_resource.resource_"$RESOURCE_NAME" "$API_GATEWAY_ID/$RESOURCE_ID"
+    terraform import aws_api_gateway_resource.resource_${RESOURCE_HASH} "$API_GATEWAY_ID/$RESOURCE_ID"
   else
     echo "Resource $RESOURCE_PATH already exists in the configuration, skipping import."
   fi
@@ -44,12 +45,13 @@ for RESOURCE_ID in $(echo "$RESOURCES" | awk '{print $1}'); do
 
   for METHOD in $METHODS; do
     METHOD_NAME=$(echo "$METHOD" | tr '[:upper:]' '[:lower:]')
+    RESOURCE_HASH=$(echo -n "$RESOURCE_ID$METHOD" | sha256sum | cut -d' ' -f1)
     
     # Check if method block already exists
-    if ! grep -q "resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\"" "$API_FILE"; then
-      echo "resource \"aws_api_gateway_method\" \"method_${RESOURCE_ID}_${METHOD_NAME}\" {}" >> $API_FILE
+    if ! grep -q "resource \"aws_api_gateway_method\" \"method_${RESOURCE_HASH}\"" "$API_FILE"; then
+      echo "resource \"aws_api_gateway_method\" \"method_${RESOURCE_HASH}\" {}" >> $API_FILE
       echo "Importing method: $METHOD for resource ID: $RESOURCE_ID"
-      terraform import aws_api_gateway_method.method_"$RESOURCE_ID"_"$METHOD_NAME" "$API_GATEWAY_ID/$RESOURCE_ID/$METHOD"
+      terraform import aws_api_gateway_method.method_${RESOURCE_HASH} "$API_GATEWAY_ID/$RESOURCE_ID/$METHOD"
     else
       echo "Method $METHOD for resource ID $RESOURCE_ID already exists in the configuration, skipping import."
     fi
@@ -62,9 +64,9 @@ STAGES=$(aws apigateway get-stages --rest-api-id "$API_GATEWAY_ID" --region "$AW
 for STAGE in $STAGES; do
   # Check if stage block already exists
   if ! grep -q "resource \"aws_api_gateway_stage\" \"stage_$STAGE\"" "$API_FILE"; then
-    echo "resource \"aws_api_gateway_stage\" \"stage_$STAGE\" {}" >> $API_FILE
     echo "Importing stage: $STAGE"
-    terraform import aws_api_gateway_stage.stage_"$STAGE" "$API_GATEWAY_ID/$STAGE"
+    terraform import aws_api_gateway_stage.stage_$STAGE "$API_GATEWAY_ID/$STAGE"
+    echo "resource \"aws_api_gateway_stage\" \"stage_$STAGE\" {}" >> $API_FILE
   else
     echo "Stage $STAGE already exists in the configuration, skipping import."
   fi
@@ -76,19 +78,13 @@ DEPLOYMENTS=$(aws apigateway get-deployments --rest-api-id "$API_GATEWAY_ID" --r
 for DEPLOYMENT in $DEPLOYMENTS; do
   # Check if deployment block already exists
   if ! grep -q "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\"" "$API_FILE"; then
-    echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
     echo "Importing deployment: $DEPLOYMENT"
-    terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
+    terraform import aws_api_gateway_deployment.deployment_$DEPLOYMENT "$API_GATEWAY_ID/$DEPLOYMENT"
+    echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
   else
     echo "Deployment $DEPLOYMENT already exists in the configuration, skipping import."
   fi
 done
-
-# Check if api.tf file is empty
-if [ $(wc -l < "$API_FILE") -eq 0 ]; then
-  echo "The api.tf file is empty. Please check the API Gateway ID and AWS Region."
-  exit 1
-fi
 
 echo "All API Gateway resources, methods, stages, and deployments have been imported successfully!"
 echo "The api.tf file has been created with all necessary resources."
