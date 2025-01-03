@@ -82,23 +82,5 @@ for STAGE in $STAGES; do
   fi
 done
 
-# Import deployments if not already present
-echo "Importing deployments..."
-DEPLOYMENTS=$(aws apigateway get-deployments --rest-api-id "$API_GATEWAY_ID" --region "$AWS_REGION" --query 'items[*].id' --output text)
-for DEPLOYMENT in $DEPLOYMENTS; do
-  # Check if deployment block already exists
-  if grep -q "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\"" "$API_FILE"; then
-    # Update the existing deployment block
-    echo "Updating deployment: $DEPLOYMENT"
-    terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
-    sed -i "/resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\"/,/}/d" "$API_FILE"
-    echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
-  else
-    echo "Creating deployment: $DEPLOYMENT"
-    echo "resource \"aws_api_gateway_deployment\" \"deployment_$DEPLOYMENT\" {}" >> $API_FILE
-    terraform import aws_api_gateway_deployment.deployment_"$DEPLOYMENT" "$API_GATEWAY_ID/$DEPLOYMENT"
-  fi
-done
-
-echo "All API Gateway resources, methods, stages, and deployments have been imported successfully!"
+echo "All API Gateway resources, methods, and stages have been imported successfully!"
 echo "The api.tf file has been created with all necessary resources."
